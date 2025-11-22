@@ -487,11 +487,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jose\\Documents\\ProjetoBTG\\DesafioBTG\\backend\\backend\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\Jose\\Documents\\ProjetoBTG\\DesafioBTG\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\Jose\\Documents\\ProjetoBTG\\DesafioBTG\\backend\\backend\\backend.csproj",
+      "projectPath": "C:\\Users\\Jose\\Documents\\ProjetoBTG\\DesafioBTG\\backend\\backend.csproj",
       "packagesPath": "C:\\Users\\Jose\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jose\\Documents\\ProjetoBTG\\DesafioBTG\\backend\\backend\\obj\\",
+      "outputPath": "C:\\Users\\Jose\\Documents\\ProjetoBTG\\DesafioBTG\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Jose\\AppData\\Roaming\\NuGet\\NuGet.Config"
