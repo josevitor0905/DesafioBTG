@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bwl/Pz2yqDw=",
+  "dgSpecHash": "jI6b6WKKc4A=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jose\\Documents\\ProjetoBTG\\DesafioBTG\\backend\\backend.csproj",
+  "projectFilePath": "C:\\Users\\Jose\\Documents\\ProjetosProgamacao\\DesafioBTG\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jose\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Jose\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
