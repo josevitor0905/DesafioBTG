@@ -7,5 +7,5 @@ public class Vacinacao
     public int VacinaId {get; set; }
     public Vacina? Vacina {get; set; }
     public int Dose {get; set; }
-    public DateTime DataDaVacinacao { get; set; }
+    public DateTime DataDaVacinacao {get; set; }
 }
