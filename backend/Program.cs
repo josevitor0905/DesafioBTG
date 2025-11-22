@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using backend.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,7 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("VacinaDb"));
+
 var app = builder.Build();
+
+app.MapGet("/testdb", async (AppDbContext db) =>
+{
+    return await db.Pessoa.ToListAsync();
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

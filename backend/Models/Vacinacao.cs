@@ -1,4 +1,4 @@
-using System;
+namespace backend.Models;
 public class Vacinacao
 {
     public int Id {get; set; }

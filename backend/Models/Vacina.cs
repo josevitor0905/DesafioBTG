@@ -1,3 +1,4 @@
+namespace backend.Models;
 public class Vacina
 {
     public int Id {get; set; }
