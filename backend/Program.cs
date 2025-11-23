@@ -20,6 +20,8 @@ builder.Services.AddScoped<PessoaService>();
 builder.Services.AddScoped<VacinaService>();
 builder.Services.AddScoped<VacinacaoService>();
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 app.MapGet("/testdb", async (AppDbContext db) =>
@@ -55,6 +57,8 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
+
+app.MapControllers();
 
 app.Run();
 
