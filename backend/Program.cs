@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Repositories;
+using backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,10 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDataba
 builder.Services.AddScoped<IPessoaRepository, PessoaRepository>();
 builder.Services.AddScoped<IVacinaRepository, VacinaRepository>();
 builder.Services.AddScoped<IVacinacaoRepository, VacinacaoRepository>();
+
+builder.Services.AddScoped<PessoaService>();
+builder.Services.AddScoped<VacinaService>();
+builder.Services.AddScoped<VacinacaoService>();
 
 var app = builder.Build();
 

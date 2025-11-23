@@ -2,6 +2,6 @@ namespace backend.Models;
 public class Pessoa
 {
     public int Id {get; set; }
-    public string Name {get; set; } = null!;
+    public string Nome {get; set; } = null!;
     public List<Vacinacao> Vacinacoes {get; set; } = new();
 }
