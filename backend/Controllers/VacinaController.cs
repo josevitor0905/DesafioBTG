@@ -29,4 +29,17 @@ public class VacinaController : ControllerBase
         var vacinas = await _vacinaService.ListarAsync();
         return Ok(vacinas);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Remover(int id)
+    {
+        var removido = await _vacinaService.RemoverVacinaAsync(id);
+        
+        if (!removido)
+        {
+            return NotFound("Vacina não encontrada.");
+        }
+
+        return NoContent();
+    }
 }

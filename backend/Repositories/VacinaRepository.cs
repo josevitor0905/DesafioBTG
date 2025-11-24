@@ -30,6 +30,17 @@ public class VacinaRepository : IVacinaRepository
         return vacina;
     }
 
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var vacina = await _context.Vacinas.FindAsync(id);
+        if (vacina == null)
+            return false;
+
+        _context.Vacinas.Remove(vacina);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

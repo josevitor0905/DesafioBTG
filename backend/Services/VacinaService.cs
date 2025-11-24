@@ -23,6 +23,11 @@ public class VacinaService
         return await _vacinaRepo.AddAsync(vacina);
     }
 
+    public async Task<bool> RemoverVacinaAsync(int id)
+    {
+        return await _vacinaRepo.DeleteAsync(id);
+    }
+
     public async Task<List<Vacina>> ListarAsync()
     {
         return await _vacinaRepo.GetAllAsync();
