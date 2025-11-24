@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 
 export class PessoaService {
-  private api = 'https://localhost:5011/api/pessoa'
+  private api = 'http://localhost:5011/api/pessoa'
 
   constructor(private http: HttpClient) {}
 
