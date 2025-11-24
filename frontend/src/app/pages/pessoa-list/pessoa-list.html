@@ -1,0 +1,14 @@
+<h2>Pessoas</h2>
+
+<input type="text" [(ngModel)]="novoNome" placeholder="Nome da Pessoa">
+
+<button (click)="criar()">Adicionar</button>
+
+<ul>
+    <li *ngFor="let p of pessoas">
+        {{ p.nome }}
+
+        <button (click)="abrirCartao(p.id)">Ver Cartão</button>
+        <button (click)="excluir(p.id)">Excluir</button>
+    </li>
+</ul>
