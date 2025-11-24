@@ -5,5 +5,5 @@ import { PessoaCartao } from './pages/pessoa-cartao/pessoa-cartao';
 
 export const routes: Routes = [
     {path: '', component: PessoaList},
-    {path: 'pessoa/id', component: PessoaCartao}
+    {path: 'pessoa/:id', component: PessoaCartao}
 ];
