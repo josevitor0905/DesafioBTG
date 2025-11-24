@@ -33,10 +33,14 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseInMemoryDatabase("VacinasDb"));
-
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    
+    db.Database.EnsureCreated();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -49,7 +53,7 @@ app.MapControllers();
 
 app.MapGet("/testdb", async (AppDbContext db) =>
 {
-    return await db.Pessoa.ToListAsync();
+    return await db.Pessoas.ToListAsync();
 });
 
 // Configure the HTTP request pipeline.

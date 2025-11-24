@@ -9,8 +9,21 @@ namespace backend.Data
         {
         }
 
-        public DbSet<Pessoa> Pessoa { get; set; } = null!;
+        public DbSet<Pessoa> Pessoas { get; set; } = null!;
         public DbSet<Vacina> Vacinas { get; set; } = null!;
         public DbSet<Vacinacao> Vacinacoes { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Vacina>().HasData(
+            new Vacina { Id = 1, Nome = "BCG" },
+            new Vacina { Id = 2, Nome = "Hepatite B" },
+            new Vacina { Id = 3, Nome = "Pentavalente" },
+            new Vacina { Id = 4, Nome = "VIP (Poliomielite Inativada)" },
+            new Vacina { Id = 5, Nome = "VOP (Poliomielite Oral)" }
+            );
+        }
     }
 }

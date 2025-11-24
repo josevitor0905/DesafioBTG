@@ -15,7 +15,7 @@ public class PessoaRepository : IPessoaRepository
 
     public async Task<Pessoa?> GetByIdAsync(int id)
     {
-        return await _context.Pessoa
+        return await _context.Pessoas
             .Include(p => p.Vacinacoes)
             .ThenInclude(v => v.Vacina)
             .FirstOrDefaultAsync(p => p.Id == id);
@@ -23,23 +23,23 @@ public class PessoaRepository : IPessoaRepository
 
     public async Task<List<Pessoa>> GetAllAsync()
     {
-        return await _context.Pessoa.ToListAsync();
+        return await _context.Pessoas.ToListAsync();
     }
 
     public async Task<Pessoa> AddAsync(Pessoa pessoa)
     {
-        _context.Pessoa.Add(pessoa);
+        _context.Pessoas.Add(pessoa);
         await _context.SaveChangesAsync();
         return pessoa;
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var pessoa = await _context.Pessoa.FindAsync(id);
+        var pessoa = await _context.Pessoas.FindAsync(id);
         if (pessoa == null)
             return false;
 
-        _context.Pessoa.Remove(pessoa);
+        _context.Pessoas.Remove(pessoa);
         await _context.SaveChangesAsync();
         return true;
     }
