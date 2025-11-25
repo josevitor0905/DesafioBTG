@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Models;   
 
-namespace backend.Data   
-{
+namespace backend.Data;  
+
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -24,6 +24,10 @@ namespace backend.Data
             new Vacina { Id = 4, Nome = "VIP (Poliomielite Inativada)" },
             new Vacina { Id = 5, Nome = "VOP (Poliomielite Oral)" }
             );
+
+        modelBuilder.Entity<Pessoa>().HasData(
+            new Pessoa { Id = 1, Nome = "João Pessoa"},
+            new Pessoa { Id = 2, Nome = "Maria Fumaça"}
+            );
         }
     }
-}

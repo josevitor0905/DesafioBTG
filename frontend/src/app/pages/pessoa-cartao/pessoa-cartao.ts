@@ -5,6 +5,7 @@ import { PessoaService } from '../../services/pessoa';
 import { VacinaService } from '../../services/vacina';
 import { VacinacaoService } from '../../services/vacinacao';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pessoa-cartao',
@@ -27,7 +28,8 @@ export class PessoaCartao implements OnInit {
     private route: ActivatedRoute,
     private pessoaService: PessoaService,
     private vacinaService: VacinaService,
-    private vacinacaoService: VacinacaoService
+    private vacinacaoService: VacinacaoService,
+    private router: Router
   ) {}
 
   carregarCartao() {
@@ -58,5 +60,9 @@ export class PessoaCartao implements OnInit {
       next: () => this.carregarCartao(),
       error: (err) => alert(err.error.erro)
     });
+  }
+
+  abrirPessoaList() {
+    this.router.navigate(['']);
   }
 }
