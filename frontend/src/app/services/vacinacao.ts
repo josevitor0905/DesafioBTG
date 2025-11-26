@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class VacinacaoService {
-  private api = 'http://localhost:5011/api/vacinacao'
+  private api = 'http://localhost:5011/api/Vacinacao'
 
   constructor(private http: HttpClient) {}
 

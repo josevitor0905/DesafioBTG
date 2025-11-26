@@ -1,6 +1,6 @@
 <html>
 
-<h2>Pessoas
+<h2>Desafio BTG
   <input type="text" [(ngModel)]="novoNome" placeholder="Nome da Pessoa">
   <button (click)="criar()">Adicionar</button>
 </h2>
@@ -69,8 +69,13 @@
         </div>
         
         <div class="info-box">
-            <span class="info-label">ID do Sistema:</span>
-            <span class="info-value">{{ pessoaDetalhe.id }}</span>
+            <span class="info-label">Idade:</span>
+            <span class="info-value">{{ pessoaDetalhe.idade }}</span>
+        </div>
+
+        <div class="info-box">
+            <span class="info-label">Sexo</span>
+            <span class="info-value">{{ pessoaDetalhe.sexo }}</span>
         </div>
             
     </div>
@@ -95,12 +100,19 @@
       </tr>
     </thead>
 
-    <tbody>
+    <!-- <tbody>
       <tr>
         <td class="dose-cell">1ª Dose</td>
         @for (v of vacinas; track v.id) {
           <td class="status-cell">
-            <div class="quadrado"></div>
+            @let registro = verificarStatus(v.id, 1);
+            <div class="quadrado" [class.aplicado]="registro">
+              @if (registro) {
+                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
+              } @else {
+                <span class="status-faltoso">Faltoso</span>
+              }
+            </div>
           </td>
         }
       </tr>
@@ -109,7 +121,14 @@
         <td class="dose-cell">2ª Dose</td>
         @for (v of vacinas; track v.id) {
           <td class="status-cell">
-            <div class="quadrado"></div>
+            @let registro = verificarStatus(v.id, 2);
+            <div class="quadrado" [class.aplicado]="registro">
+              @if (registro) {
+                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
+              } @else {
+                <span class="status-faltoso">Faltoso</span>
+              }
+            </div>
           </td>
         }
       </tr>
@@ -118,7 +137,15 @@
         <td class="dose-cell">3ª Dose</td>
         @for (v of vacinas; track v.id) {
           <td class="status-cell">
-            <div class="quadrado"></div>
+            <td class="status-cell">
+            @let registro = verificarStatus(v.id, 3);
+            <div class="quadrado" [class.aplicado]="registro">
+              @if (registro) {
+                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
+              } @else {
+                <span class="status-faltoso">Faltoso</span>
+              }
+            </div>
           </td>
         }
       </tr>
@@ -127,7 +154,15 @@
         <td class="dose-cell">1º Reforço</td>
         @for (v of vacinas; track v.id) {
           <td class="status-cell">
-            <div class="quadrado"></div>
+            <td class="status-cell">
+            @let registro = verificarStatus(v.id, 4);
+            <div class="quadrado" [class.aplicado]="registro">
+              @if (registro) {
+                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
+              } @else {
+                <span class="status-faltoso">Faltoso</span>
+              }
+            </div>
           </td>
         }
       </tr>
@@ -136,12 +171,44 @@
         <td class="dose-cell">2º Reforço</td>
         @for (v of vacinas; track v.id) {
           <td class="status-cell">
-            <div class="quadrado"></div>
+            <td class="status-cell">
+            @let registro = verificarStatus(v.id, 5);
+            <div class="quadrado" [class.aplicado]="registro">
+              @if (registro) {
+                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
+              } @else {
+                <span class="status-faltoso">Faltoso</span>
+              }
+            </div>
           </td>
         }
       </tr>
       
-      </tbody>
+    </tbody> -->
+
+    <tbody>
+      @for (dose of doses; track dose.numero) {
+        <tr>
+          <td class="dose-cell">{{ dose.nome }}</td>
+          
+          @for (v of vacinas; track v.id) {
+            <td class="status-cell">
+              @let registro = verificarStatus(v.id, dose.numero); 
+              
+              <div class="quadrado" [class.aplicado]="registro">
+                
+                @if (registro) {
+                  <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
+                } @else {
+                  <span class="status-faltoso">Faltoso</span>
+                }
+                
+              </div>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
   </table>
 </div>
 

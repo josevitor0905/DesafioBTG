@@ -116,21 +116,13 @@ select{
 }
 
 /* 5. ESTILO DO QUADRADO INTERNO (Onde irá o status) */
-.quadrado {
-    display: block;
-    width: 40px;
-    height: 40px;
-    margin: 0 auto; /* Centraliza o quadrado na célula */
-    border-radius: 4px;
-    /* Estilo de uma célula VAZIA (não aplicada) */
-    background-color: #f0f0f0; 
-    border: 1px solid #ccc;
+
+.status-aplicado {
+    color: #155724;
+    font-weight: bold;
 }
 
-/* Exemplo de estilos para status: */
-/*
-.quadrado.aplicada {
-    background-color: #28a745; 
-    border: 1px solid #218838;
+.status-faltoso {
+    color: #ec3737;
+    font-weight: bold;
 }
-*/

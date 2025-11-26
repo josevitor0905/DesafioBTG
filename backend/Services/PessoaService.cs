@@ -19,7 +19,9 @@ public class PessoaService
     {
         var pessoa = new Pessoa
         {
-            Nome = dto.Nome
+            Nome = dto.Nome,
+            Idade = dto.Idade,
+            Sexo = dto.Sexo
         };
 
         await _pessoaRepo.AddAsync(pessoa);
@@ -27,7 +29,9 @@ public class PessoaService
         return new PessoaDTO
         {
             Id = pessoa.Id,
-            Nome = pessoa.Nome
+            Nome = pessoa.Nome,
+            Idade = pessoa.Idade,
+            Sexo = pessoa.Sexo
         };
     }
 
@@ -47,6 +51,6 @@ public class PessoaService
     {
         var pessoas = await _pessoaRepo.GetAllAsync();
 
-        return pessoas.Select(p => new PessoaDTO{Id = p.Id, Nome = p.Nome}).ToList();
+        return pessoas.Select(p => new PessoaDTO{Id = p.Id, Nome = p.Nome, Idade = p.Idade, Sexo = p.Sexo}).ToList();
     }
 }

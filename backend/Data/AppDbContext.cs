@@ -26,8 +26,8 @@ namespace backend.Data;
             );
 
         modelBuilder.Entity<Pessoa>().HasData(
-            new Pessoa { Id = 1, Nome = "João Pessoa"},
-            new Pessoa { Id = 2, Nome = "Maria Fumaça"}
+            new Pessoa { Id = 1, Nome = "João Pessoa", Idade = 19, Sexo = "Masculino"},
+            new Pessoa { Id = 2, Nome = "Maria Fumaça", Idade = 20, Sexo = "Feminino"}
             );
         }
     }

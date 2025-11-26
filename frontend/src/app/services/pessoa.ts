@@ -8,7 +8,7 @@ import { Pessoa } from '../interface/pessoa-interface';
 })
 
 export class PessoaService {
-  private api = 'http://localhost:5011/api/pessoa'
+  private api = 'http://localhost:5011/api/Pessoa'
 
   constructor(private http: HttpClient) {}
 

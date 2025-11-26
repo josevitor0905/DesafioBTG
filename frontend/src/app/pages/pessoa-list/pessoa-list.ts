@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class PessoaList implements OnInit {
-  pessoas!: Pessoa[];
+  pessoas: Pessoa[] = [];
   pessoaId!: number;
   novoNome: string = '';
   pessoaSelecionada: number | null = null;
@@ -27,6 +27,14 @@ export class PessoaList implements OnInit {
   vacinacoes: any[] = [];
   dose!: number;
   data!: string;
+
+  doses: { numero: number, nome: string }[] = [
+        { numero: 1, nome: '1ª Dose' },
+        { numero: 2, nome: '2ª Dose' },
+        { numero: 3, nome: '3ª Dose' },
+        { numero: 4, nome: '1º Reforço' },
+        { numero: 5, nome: '2º Reforço' },
+    ];
 
 
   constructor(
@@ -43,9 +51,23 @@ export class PessoaList implements OnInit {
     this.carregar();
   }
 
-  carregarCartao() {
-    this.pessoaService.obterCartao(this.pessoaId).subscribe(res => {
+  verificarStatus(vacinaId: number, dose: number): any | null {
+    const vac = this.vacinas.find(a =>
+      a.id === vacinaId
+    );
+    const registro = this.vacinacoes.find(v => 
+        String(v.nomeVacina) === vac.nome && 
+        Number(v.dose) === dose
+    );
+    
+    // Retorna o registro se encontrado, caso contrário, null
+    return registro || null;
+}
+
+  carregarCartao(id: number) {
+    this.pessoaService.obterCartao(id).subscribe(res => {
       this.vacinacoes = res;
+      console.log('Vacinações carregadas:', this.vacinacoes);
     });
   }
 
@@ -64,7 +86,8 @@ export class PessoaList implements OnInit {
       {
         const pessoaEncontrada = this.pessoas.find(p => p.id === this.pessoaSelecionada);      
         this.pessoaDetalhe = pessoaEncontrada || null;
-        this.carregarCartao();
+        console.log('Pessoa Selecionada:', this.pessoaSelecionada);
+        this.carregarCartao(this.pessoaSelecionada);
       } 
       else 
       {
