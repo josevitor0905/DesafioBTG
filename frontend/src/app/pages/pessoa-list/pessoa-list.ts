@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PessoaService } from '../../services/pessoa';
@@ -7,7 +7,7 @@ import { VacinacaoService } from '../../services/vacinacao';
 import { FormsModule } from '@angular/forms';
 import { Pessoa } from '../../interface/pessoa-interface';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, mergeMap, forkJoin, catchError, throwError, map } from 'rxjs';
+import { Observable, mergeMap, forkJoin, catchError, throwError, map, of } from 'rxjs';
 
 @Component({
   selector: 'app-pessoa-list',
@@ -64,23 +64,25 @@ export class PessoaList implements OnInit {
     private pessoaService: PessoaService,
     private vacinaService: VacinaService,
     private vacinacaoService: VacinacaoService,
-    private router: Router
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.pessoaId = Number(this.route.snapshot.paramMap.get('id'));
-    this.carregarVacinas();
     this.carregarPessoas();
+    this.carregarVacinas();
+    this.cd.detectChanges();
+    console.log('Pessoas:', this.pessoas);
   }
 
   trocarModo(novoModo: 'consulta' | 'cadastro'): void {
-        this.modoAtual = novoModo;
-        
-        if (novoModo === 'cadastro') {
-             this.pessoaDetalhe = null;
-             this.pessoaSelecionada = null;
-        }
-    }
+      this.modoAtual = novoModo;
+      
+      if (novoModo === 'cadastro') {
+            this.pessoaDetalhe = null;
+            this.pessoaSelecionada = null;
+      }
+    this.cd.detectChanges(); 
+  }
 
   verificarStatus(vacinaId: number, dose: number): any | null {
     const vac = this.vacinas.find(a =>
@@ -91,28 +93,32 @@ export class PessoaList implements OnInit {
         Number(v.dose) === dose
     );
     return registro || null;
-}
+  }
 
   carregarCartao(id: number) {
     this.pessoaService.obterCartao(id).subscribe(res => {
       this.vacinacoes = res;
+      this.cd.detectChanges();
       console.log('Vacinações carregadas:', this.vacinacoes);
     });
   }
 
   carregarVacinas() {
-        this.vacinaService.listar().subscribe({
-            next: (res) => {
-                this.vacinas = res;
-            },
-            error: (err) => console.error('Erro ao carregar vacinas:', err)
-        });
+      this.vacinaService.listar().subscribe({
+          next: (res) => {
+              this.vacinas = res;
+              this.cd.detectChanges();
+              console.log('Vacinas carregadas:', this.vacinas);
+          },
+          error: (err) => console.error('Erro ao carregar vacinas:', err)
+      });
+      this.cd.detectChanges();
     }
 
   onSelectionChange() {
     if (this.pessoaSelecionada) 
       {
-        const pessoaEncontrada = this.pessoas.find(p => p.id === this.pessoaSelecionada);      
+        const pessoaEncontrada = this.pessoas!.find(p => p.id === this.pessoaSelecionada);      
         this.pessoaDetalhe = pessoaEncontrada || null;
         console.log('Pessoa Selecionada:', this.pessoaSelecionada);
         this.carregarCartao(this.pessoaSelecionada);
@@ -122,12 +128,18 @@ export class PessoaList implements OnInit {
         this.pessoaDetalhe = null;
         this.vacinacoes = [];
       }
+      this.cd.detectChanges();
   }
 
   carregarPessoas() {
     this.pessoaService.listar().subscribe({
-      next: (res) => this.pessoas = res
+      next: (res) => {
+        this.pessoas = res;
+        this.cd.detectChanges();
+        console.log('Pessoas carregadas:', this.pessoas);
+      }        
     });
+    
   }
 
   criarPessoa() {
@@ -147,8 +159,9 @@ export class PessoaList implements OnInit {
     }
 
     this.pessoaService.criar(this.novoNome, this.novaIdade, this.novoSexo).subscribe(() => {
+      alert('Pessoa criada com sucesso!');
       this.novoNome = '';
-      this.novaIdade = 0;
+      this.novaIdade = null;
       this.novoSexo = '';
       this.carregarPessoas();
     });
@@ -161,6 +174,7 @@ export class PessoaList implements OnInit {
     }
 
     this.vacinaService.criar(this.novaVacina).subscribe(() => {
+      alert('Vacina criada com sucesso!');
       this.novaVacina = '';
       this.carregarVacinas();
     });
@@ -169,7 +183,7 @@ export class PessoaList implements OnInit {
   excluirPessoa(id: number) {
     if (confirm('Deseja excluir esta pessoa e TODAS as suas vacinações?'))
     {
-      this.excluirTodasVacinacoesPorPessoa(id).pipe(
+        this.excluirTodasVacinacoesPorPessoa(id).pipe(
             mergeMap(() => {
                 return this.pessoaService.remover(id);
             })
@@ -187,6 +201,7 @@ export class PessoaList implements OnInit {
     if (confirm('Deseja mesmo excluir esta vacina?'))
     {
       this.vacinaService.remover(id).subscribe(() => this.carregarVacinas());
+      this.carregarVacinas();
     }
   }
 
@@ -232,8 +247,12 @@ export class PessoaList implements OnInit {
   excluirTodasVacinacoesPorPessoa(pessoaId: number): Observable<any> {
     // 1. Obtém o cartão de vacinação (lista de vacinações)
     return this.pessoaService.obterCartao(pessoaId).pipe(
+      
         // 2. Transforma a lista de vacinações em uma série de chamadas de exclusão
         mergeMap((vacinacoes: any[]) => {
+            if (vacinacoes.length === 0) {
+                  return of(null); 
+              }
             // Cria um array de Observables (uma chamada de remoção para cada vacinação)
             const exclusoes = vacinacoes.map(vac => 
                 this.vacinacaoService.remover(vac.id)
@@ -252,5 +271,5 @@ export class PessoaList implements OnInit {
         // Retorna um Observable vazio para sinalizar a conclusão desta etapa
         map(() => {})
     );
-}
+  }
 }

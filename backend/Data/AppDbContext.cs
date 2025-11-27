@@ -9,7 +9,7 @@ namespace backend.Data;
         {
         }
 
-        public DbSet<Pessoa> Pessoas { get; set; } = null!;
+        public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Vacina> Vacinas { get; set; } = null!;
         public DbSet<Vacinacao> Vacinacoes { get; set; } = null!;
 
