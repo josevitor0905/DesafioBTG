@@ -16,8 +16,8 @@ export class PessoaService {
     return this.http.get<Pessoa[]>(this.api);
   }
 
-  criar(nome: string): Observable<any> {
-    return this.http.post<any>(this.api, { nome });
+  criar(nome: string, idade: number, sexo: string): Observable<any> {
+    return this.http.post<any>(this.api, { nome, idade, sexo });
   }
 
   remover(id: number): Observable<void> {

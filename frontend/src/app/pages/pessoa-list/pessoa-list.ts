@@ -7,6 +7,7 @@ import { VacinacaoService } from '../../services/vacinacao';
 import { FormsModule } from '@angular/forms';
 import { Pessoa } from '../../interface/pessoa-interface';
 import { ActivatedRoute } from '@angular/router';
+import { Observable, mergeMap, forkJoin, catchError, throwError, map } from 'rxjs';
 
 @Component({
   selector: 'app-pessoa-list',
@@ -19,14 +20,34 @@ import { ActivatedRoute } from '@angular/router';
 export class PessoaList implements OnInit {
   pessoas: Pessoa[] = [];
   pessoaId!: number;
-  novoNome: string = '';
-  pessoaSelecionada: number | null = null;
-  pessoaDetalhe: Pessoa | null = null;
 
+  
+  pessoaSelecionada: number | null = null;
+  pessoaSelecionadaVacinacaoDel: number | null = null;
+  vacinaSelecionada: number | null = null;
+  dose: number | null = null;
+  data: string | null = null;
+
+  novoNome: string | null = null; 
+  novaIdade: number | null = null;
+  novoSexo: string | null = null;
+  novaVacina: string | null = null;
+
+ 
+  pessoaDetalhe: Pessoa | null = null;
   vacinas: any[] = [];
   vacinacoes: any[] = [];
-  dose!: number;
-  data!: string;
+
+
+  //novoNome: string = '';
+  //novaIdade: number = 0;
+  //novoSexo: string = '';
+  //novaVacina: string = '';
+
+  //pessoaSelecionada: number | null = null;
+  //vacinaSelecionada!: number;
+  //dose!: number;
+  //data!: string;
 
   doses: { numero: number, nome: string }[] = [
         { numero: 1, nome: '1ª Dose' },
@@ -35,7 +56,8 @@ export class PessoaList implements OnInit {
         { numero: 4, nome: '1º Reforço' },
         { numero: 5, nome: '2º Reforço' },
     ];
-
+  
+  modoAtual: 'consulta' | 'cadastro' = 'consulta';
 
   constructor(
     private route: ActivatedRoute,
@@ -48,8 +70,17 @@ export class PessoaList implements OnInit {
   ngOnInit(): void {
     this.pessoaId = Number(this.route.snapshot.paramMap.get('id'));
     this.carregarVacinas();
-    this.carregar();
+    this.carregarPessoas();
   }
+
+  trocarModo(novoModo: 'consulta' | 'cadastro'): void {
+        this.modoAtual = novoModo;
+        
+        if (novoModo === 'cadastro') {
+             this.pessoaDetalhe = null;
+             this.pessoaSelecionada = null;
+        }
+    }
 
   verificarStatus(vacinaId: number, dose: number): any | null {
     const vac = this.vacinas.find(a =>
@@ -59,8 +90,6 @@ export class PessoaList implements OnInit {
         String(v.nomeVacina) === vac.nome && 
         Number(v.dose) === dose
     );
-    
-    // Retorna o registro se encontrado, caso contrário, null
     return registro || null;
 }
 
@@ -72,7 +101,6 @@ export class PessoaList implements OnInit {
   }
 
   carregarVacinas() {
-        // Assume-se que você tem o VacinaService injetado
         this.vacinaService.listar().subscribe({
             next: (res) => {
                 this.vacinas = res;
@@ -96,32 +124,133 @@ export class PessoaList implements OnInit {
       }
   }
 
-  carregar() {
+  carregarPessoas() {
     this.pessoaService.listar().subscribe({
       next: (res) => this.pessoas = res
     });
   }
 
-  criar() {
-    if (!this.novoNome.trim()) 
+  criarPessoa() {
+    if (!this.novoNome?.trim()) {
+        alert('O nome da pessoa é obrigatório.');
+        return;
+    }
+    
+    if (!this.novaIdade || this.novaIdade <= 0) {
+        alert('A idade deve ser informada e maior que zero.');
+        return;
+    }
+
+    if (!this.novoSexo?.trim()) {
+        alert('O sexo da pessoa é obrigatório.');
+        return;
+    }
+
+    this.pessoaService.criar(this.novoNome, this.novaIdade, this.novoSexo).subscribe(() => {
+      this.novoNome = '';
+      this.novaIdade = 0;
+      this.novoSexo = '';
+      this.carregarPessoas();
+    });
+  }
+
+  criarVacina() {
+    if (!this.novaVacina?.trim() || !this.novaVacina) 
     {
       return;
     }
 
-    this.pessoaService.criar(this.novoNome).subscribe(() => {
-      this.novoNome = ''; 
-      this.carregar();
+    this.vacinaService.criar(this.novaVacina).subscribe(() => {
+      this.novaVacina = '';
+      this.carregarVacinas();
     });
   }
 
-  excluir(id: number) {
-    if (confirm('Deseja excluir esta pessoa?'))
+  excluirPessoa(id: number) {
+    if (confirm('Deseja excluir esta pessoa e TODAS as suas vacinações?'))
     {
-      this.pessoaService.remover(id).subscribe(() => this.carregar());
+      this.excluirTodasVacinacoesPorPessoa(id).pipe(
+            mergeMap(() => {
+                return this.pessoaService.remover(id);
+            })
+        ).subscribe({
+            next: () => {
+                alert('Pessoa e vacinações associadas excluídas com sucesso!');
+                this.carregarPessoas();
+            },
+            error: (err) => alert(err.message || 'Erro ao excluir pessoa e vacinações.')
+        });
     }
   }
 
-  abrirCartao(id: number) {
-    this.router.navigate(['/pessoa', id]);
+  excluirVacina(id: number) {
+    if (confirm('Deseja mesmo excluir esta vacina?'))
+    {
+      this.vacinaService.remover(id).subscribe(() => this.carregarVacinas());
+    }
   }
+
+  registrarVacinacao() {
+    if (!this.pessoaSelecionada || !this.vacinaSelecionada || !this.dose || !this.data) {
+        alert('Por favor, preencha todos os campos (Pessoa, Vacina, Dose e Data) para registrar a vacinação.');
+        return; 
+    }
+
+    const dto = {
+        pessoaId: this.pessoaSelecionada!, 
+        vacinaId: this.vacinaSelecionada!, 
+        dose: this.dose!,
+        dataAplicacao: this.data! 
+    };
+ 
+    this.vacinacaoService.registrar(dto).subscribe({
+        next: () => {
+            alert('Vacinação registrada com sucesso!');
+            this.pessoaSelecionada = null;
+            this.vacinaSelecionada = null;
+            this.dose = null;
+            this.data = null;
+            this.carregarVacinas(); 
+        },
+        error: (err) => alert(err.error.erro || 'Erro ao registrar vacinação.')
+    });
+  }
+
+  excluirVacinacao(id: number) {
+    if (!this.pessoaSelecionadaVacinacaoDel) {
+        alert('Pessoa nao existe');
+        return; 
+    }
+
+    if (confirm('Deseja mesmo excluir esta vacinacao?'))
+    {
+      this.vacinacaoService.remover(id).subscribe(() => this.carregarCartao(this.pessoaSelecionadaVacinacaoDel!));
+      this.pessoaSelecionadaVacinacaoDel = null;
+    }
+  }
+
+  excluirTodasVacinacoesPorPessoa(pessoaId: number): Observable<any> {
+    // 1. Obtém o cartão de vacinação (lista de vacinações)
+    return this.pessoaService.obterCartao(pessoaId).pipe(
+        // 2. Transforma a lista de vacinações em uma série de chamadas de exclusão
+        mergeMap((vacinacoes: any[]) => {
+            // Cria um array de Observables (uma chamada de remoção para cada vacinação)
+            const exclusoes = vacinacoes.map(vac => 
+                this.vacinacaoService.remover(vac.id)
+            );
+            // Combina todos os Observables de remoção. Espera que todas terminem.
+            return forkJoin(exclusoes).pipe(
+                // Retorna um Observable vazio/completo para continuar o pipe principal
+                catchError(err => {
+                    console.error('Erro ao excluir uma ou mais vacinações:', err);
+                    // Decide se o processo deve parar ou continuar. 
+                    // Se falhar a exclusão de vacinas, é melhor parar
+                    return throwError(() => new Error('Falha ao excluir vacinações associadas.'));
+                })
+            );
+        }),
+        // Retorna um Observable vazio para sinalizar a conclusão desta etapa
+        map(() => {})
+    );
+}
 }

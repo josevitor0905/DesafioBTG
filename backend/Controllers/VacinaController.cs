@@ -31,7 +31,7 @@ public class VacinaController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Remover(int id)
+    public async Task<IActionResult> RemoverVacina(int id)
     {
         var removido = await _vacinaService.RemoverVacinaAsync(id);
         

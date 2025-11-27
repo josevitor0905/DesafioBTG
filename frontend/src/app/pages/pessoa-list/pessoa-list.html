@@ -1,219 +1,225 @@
 <html>
 
-<h2>Desafio BTG
-  <input type="text" [(ngModel)]="novoNome" placeholder="Nome da Pessoa">
-  <button (click)="criar()">Adicionar</button>
-</h2>
+<div class="header-principal">
+    <h1>Desafio BTG</h1>
+    
+    <div id="header-buttons">
+        <div class="botoes-modo">
+            <button 
+                [class.ativo]="modoAtual === 'consulta'" 
+                (click)="trocarModo('consulta')">
+                Consulta
+            </button>
+            <button 
+                [class.ativo]="modoAtual === 'cadastro'" 
+                (click)="trocarModo('cadastro')">
+                Cadastro
+            </button>
+        </div>
+    </div>
+</div>
 
 <hr>
 
-<!-- <ul>
-    <li>
-        @for (item of pessoas; track item.id) {
-        <li>{{ item.nome }}
-            <button (click)="abrirCartao(item.id)">Ver Cartão</button>
-            <button (click)="excluir(item.id)">Excluir</button>
-        </li>
-        } @empty {
-        <li>There are no items.</li>
-        }        
-    </li>
-</ul> -->
+@if (modoAtual === 'consulta') {
+  <!-- Selecionar Pessoa -->
+  <section>
+    <fieldset id="user-info-fieldset">
+      <legend>Informação do Usuário:</legend>
 
-<!-- <table>
-    <thead>
-        <tr>
-            <ul>
-                <li>
-                    @for (item of pessoas; track item.id) {
-                    <li>
-                        {{ item.nome }}
-                        <button (click)="abrirCartao(item.id)">Ver Cartão</button>
-                        <button (click)="excluir(item.id)">Excluir</button>
-                    </li>
-                    } @empty {
-                        <li>There are no items.</li>
-                    }        
-                </li>
-            </ul>
-        </tr>
-    </thead>
-</table> -->
-
-<!-- Selecionar Pessoa -->
-<section>
-  <fieldset id="user-info-fieldset">
-    <legend>Informação do Usuário:</legend>
-
-    <div class="user-select-section">
-        <label>Selecione a Pessoa:</label>
-        <select 
-            [(ngModel)]="pessoaSelecionada" 
-            (ngModelChange)="onSelectionChange()" >
-            <option [value]="null">--- Escolha uma pessoa ---</option> 
-            
-            @for (p of pessoas; track p.id) {
-                <option [ngValue]="p.id"> 
-                    {{ p.nome }}
-                </option>
-            }
-        </select>
-    </div>
-
-    @if (pessoaDetalhe) {
-    <div class="info-boxes-container">
-        
-        <div class="info-box">
-            <span class="info-label">Nome Completo:</span>
-            <span class="info-value">{{ pessoaDetalhe.nome }}</span> 
-        </div>
-        
-        <div class="info-box">
-            <span class="info-label">Idade:</span>
-            <span class="info-value">{{ pessoaDetalhe.idade }}</span>
-        </div>
-
-        <div class="info-box">
-            <span class="info-label">Sexo</span>
-            <span class="info-value">{{ pessoaDetalhe.sexo }}</span>
-        </div>
-            
-    </div>
-    }
-
-  </fieldset>
-</section>
-
-<!-- Tabela só aparece SE uma pessoa estiver selecionada -->
-@if (pessoaDetalhe) {
-<fieldset id="carteira-fieldset">
-<legend>Carteira Nacional de Vacinação</legend>
-<div class="tabela-wrapper"> <table class="tabela-vacina">
-    
-    <thead>
-      <tr>
-        <th class="dose-header">Doses</th> 
-        
-        @for (v of vacinas; track v.id) {
-          <th>{{ v.nome }}</th>
-        }
-      </tr>
-    </thead>
-
-    <!-- <tbody>
-      <tr>
-        <td class="dose-cell">1ª Dose</td>
-        @for (v of vacinas; track v.id) {
-          <td class="status-cell">
-            @let registro = verificarStatus(v.id, 1);
-            <div class="quadrado" [class.aplicado]="registro">
-              @if (registro) {
-                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
-              } @else {
-                <span class="status-faltoso">Faltoso</span>
-              }
-            </div>
-          </td>
-        }
-      </tr>
-
-      <tr>
-        <td class="dose-cell">2ª Dose</td>
-        @for (v of vacinas; track v.id) {
-          <td class="status-cell">
-            @let registro = verificarStatus(v.id, 2);
-            <div class="quadrado" [class.aplicado]="registro">
-              @if (registro) {
-                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
-              } @else {
-                <span class="status-faltoso">Faltoso</span>
-              }
-            </div>
-          </td>
-        }
-      </tr>
-
-      <tr>
-        <td class="dose-cell">3ª Dose</td>
-        @for (v of vacinas; track v.id) {
-          <td class="status-cell">
-            <td class="status-cell">
-            @let registro = verificarStatus(v.id, 3);
-            <div class="quadrado" [class.aplicado]="registro">
-              @if (registro) {
-                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
-              } @else {
-                <span class="status-faltoso">Faltoso</span>
-              }
-            </div>
-          </td>
-        }
-      </tr>
-
-      <tr>
-        <td class="dose-cell">1º Reforço</td>
-        @for (v of vacinas; track v.id) {
-          <td class="status-cell">
-            <td class="status-cell">
-            @let registro = verificarStatus(v.id, 4);
-            <div class="quadrado" [class.aplicado]="registro">
-              @if (registro) {
-                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
-              } @else {
-                <span class="status-faltoso">Faltoso</span>
-              }
-            </div>
-          </td>
-        }
-      </tr>
-
-      <tr>
-        <td class="dose-cell">2º Reforço</td>
-        @for (v of vacinas; track v.id) {
-          <td class="status-cell">
-            <td class="status-cell">
-            @let registro = verificarStatus(v.id, 5);
-            <div class="quadrado" [class.aplicado]="registro">
-              @if (registro) {
-                <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
-              } @else {
-                <span class="status-faltoso">Faltoso</span>
-              }
-            </div>
-          </td>
-        }
-      </tr>
-      
-    </tbody> -->
-
-    <tbody>
-      @for (dose of doses; track dose.numero) {
-        <tr>
-          <td class="dose-cell">{{ dose.nome }}</td>
-          
-          @for (v of vacinas; track v.id) {
-            <td class="status-cell">
-              @let registro = verificarStatus(v.id, dose.numero); 
+      <div class="user-select-section">
+          <label>Selecione a Pessoa:</label>
+          <select 
+              [(ngModel)]="pessoaSelecionada" 
+              (ngModelChange)="onSelectionChange()" >
+              <option [value]="null">--- Escolha uma pessoa ---</option> 
               
-              <div class="quadrado" [class.aplicado]="registro">
-                
-                @if (registro) {
-                  <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
-                } @else {
-                  <span class="status-faltoso">Faltoso</span>
-                }
-                
-              </div>
-            </td>
-          }
-        </tr>
-      }
-    </tbody>
-  </table>
-</div>
+              @for (p of pessoas; track p.id) {
+                  <option [ngValue]="p.id"> 
+                      {{ p.nome }}
+                  </option>
+              }
+          </select>
+      </div>
 
-</fieldset>
+      @if (pessoaDetalhe) {
+      <div class="info-boxes-container">
+          
+          <div class="info-box">
+              <span class="info-label">Nome Completo:</span>
+              <span class="info-value">{{ pessoaDetalhe.nome }}</span> 
+          </div>
+          
+          <div class="info-box">
+              <span class="info-label">Idade:</span>
+              <span class="info-value">{{ pessoaDetalhe.idade }}</span>
+          </div>
+
+          <div class="info-box">
+              <span class="info-label">Sexo</span>
+              <span class="info-value">{{ pessoaDetalhe.sexo }}</span>
+          </div>
+              
+      </div>
+      }
+
+    </fieldset>
+  </section>
+
+  <!-- Tabela só aparece SE uma pessoa estiver selecionada -->
+  @if (pessoaDetalhe) {
+    <fieldset id="carteira-fieldset">
+    <legend>Carteira Nacional de Vacinação</legend>
+    <div class="tabela-wrapper"> <table class="tabela-vacina">
+        
+        <thead>
+          <tr>
+            <th class="dose-header">Doses</th> 
+            
+            @for (v of vacinas; track v.id) {
+              <th>{{ v.nome }}</th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (dose of doses; track dose.numero) {
+            <tr>
+              <td class="dose-cell">{{ dose.nome }}</td>
+              
+              @for (v of vacinas; track v.id) {
+                <td class="status-cell">
+                  @let registro = verificarStatus(v.id, dose.numero); 
+                  
+                  <div class="quadrado" [class.aplicado]="registro">
+                    
+                    @if (registro) {
+                      <span class="status-aplicado">Aplicado em {{ registro.dataAplicacao | date: 'dd/MM/yy' }}</span>
+                    } @else {
+                      <span class="status-faltoso">Faltoso</span>
+                    }
+                    
+                  </div>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    </fieldset>
+  }
 }
 
+
+@if (modoAtual === 'cadastro') {
+    <section class="cadastro-container">
+
+        <h2 id="titulo-gerenciamento">Gerenciamento de Dados</h2>
+        
+        <fieldset id="management-fieldset">
+            <legend>Gerenciar Pessoas</legend>
+            
+            <h3>Criar Nova Pessoa</h3>
+
+            <div class="form-row-aplicacao">
+            <input type="text" [(ngModel)]="novoNome" placeholder="Nome da Nova Pessoa" class="input-registro">
+            <input type="text" [(ngModel)]="novaIdade" placeholder="Idade" class="input-registro">            
+            <input type="text" [(ngModel)]="novoSexo" placeholder="Sexo" class="input-registro">
+            <button (click)="criarPessoa()">Adicionar</button>
+            </div>
+
+            <h3>Excluir Pessoa</h3>
+            <ul class="pessoa-list-delete">
+                @for (p of pessoas; track p.id) {
+                    <li>
+                        {{ p.nome }}
+                        <button (click)="excluirPessoa(p.id)" class="pessoa-list-delete">Excluir</button>
+                    </li>
+                }
+            </ul>
+            
+        </fieldset>
+        
+        <fieldset id="management-fieldset">
+            <legend>Gerenciar Vacinas</legend>
+            
+            <h3>Cadastrar Nova Vacina</h3>
+
+            <div class="form-row-aplicacao">
+            <input type="text" [(ngModel)]="novaVacina" placeholder="Nome da Vacina" class="input-registro">
+            <button (click)="criarVacina()">Adicionar Vacina</button>
+            </div>
+
+            <h3>Vacinas Ativas</h3>
+            <ul class="vacina-list">
+                @for (v of vacinas; track v.id) {
+                    <li>
+                        {{ v.nome }} 
+                        <button (click)="excluirVacina(v.id)" class="vacina-list">Excluir</button>
+                    </li>
+                }
+            </ul>
+        </fieldset>
+
+        <fieldset id="management-fieldset">
+            <legend>Gerenciar Vacinacoes</legend>
+            
+            <h3>Nova Vacinacao</h3>
+            
+            <div class="form-row-aplicacao">
+        
+                <select class="input-registro" [(ngModel)]="pessoaSelecionada">
+                    <option [value]="null" disabled selected>Selecione a Pessoa</option> 
+                    @for (p of pessoas; track p.id) {
+                        <option [value]="p.id">{{ p.nome }}</option> 
+                    }
+                </select>
+
+                <select class="input-registro" [(ngModel)]="vacinaSelecionada">
+                    <option [value]="null" disabled selected>Selecione a Vacina</option>
+                    @for (v of vacinas; track v.id) {
+                        <option [value]="v.id">{{ v.nome }}</option>
+                    }
+                </select>
+                
+                <select class="input-registro" [(ngModel)]="dose">
+                    <option [value]="null" disabled selected>Selecione a Dose</option> 
+                    @for (d of doses; track d.numero) {
+                        <option [value]="d.numero">{{ d.nome }}</option>
+                    }
+                </select>
+
+                <input class="input-registro" type="date" [(ngModel)]="data">
+
+                <button (click)="registrarVacinacao()">Registrar</button>
+            </div>
+            
+            <h3>Excluir Vacinacao</h3>
+            <div class="form-row-aplicacao">
+              <select class="input-registro" [(ngModel)]="pessoaSelecionadaVacinacaoDel">
+                    <option [value]="null" disabled selected>Selecione a Pessoa</option> 
+                    @for (p of pessoas; track p.id) {
+                        <option [value]="p.id">{{ p.nome }}</option> 
+                    }
+              </select>
+
+              @if (pessoaSelecionadaVacinacaoDel) {
+                {{ carregarCartao(pessoaSelecionadaVacinacaoDel!) }}
+                <ul class="vacina-list">
+                  @for (vac of vacinacoes; track vac.id) {
+                      <li>
+                          {{ vac.nomeVacina }} 
+                          <button (click)="excluirVacinacao(vac.id)" class="vacina-list">Excluir</button>
+                      </li>
+                  }
+                </ul>
+              }          
+            </div>
+
+        </fieldset>
+    </section>
+}
 
 </html>

@@ -1,9 +1,48 @@
+
 body, html {
     background-color: #f4f4f4;
 }
 
-button{
+/* Header */
+.header-principal {
     margin-left: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.botoes-modo button {
+    padding: 10px 15px;
+    margin-left: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+#header-buttons{
+    margin-left: 10px;
+}
+
+.botoes-modo button:hover {
+    background-color: #e0e0e0;
+}
+
+.botoes-modo button.ativo {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-color: #007bff;
+}
+
+
+
+/* ===================================================================================================== */
+/* Pagina de Consulta*/
+
+button{
+    margin-left: 5px;
 }
 
 select{
@@ -41,15 +80,13 @@ select{
 }
 
 #user-info-fieldset {
-
     max-width: 700px; 
-
     margin: 40px auto; 
-
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #007bff;
 }
 
 #carteira-fieldset {
@@ -62,6 +99,7 @@ select{
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #007bff;
 }
 
 /* 1. CONFIGURAÇÃO DA BARRA DE ROLAGEM */
@@ -125,4 +163,73 @@ select{
 .status-faltoso {
     color: #ec3737;
     font-weight: bold;
+}
+
+
+
+
+/* ===================================================================================================== */
+/* Pagina de Cadastro*/
+
+.cadastro-container fieldset {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#titulo-gerenciamento{
+    max-width: 700px; 
+    margin: 40px auto;
+}
+
+.cadastro-container h3 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.pessoa-list-delete, .vacina-list{
+    margin-bottom: 5px;
+}
+
+#management-fieldset {
+    max-width: 800px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+    /* max-width: 700px; 
+    margin: 40px auto;  */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #007bff;
+}
+
+/* 1. Alinha os inputs e botão horizontalmente */
+.form-row-aplicacao {
+    display: flex;
+    gap: 10px; /* Adiciona espaço entre os elementos */
+    align-items: center; /* Centraliza verticalmente todos os itens na linha */
+    margin-bottom: 20px; /* Adiciona um espaço abaixo dessa linha de inputs */
+}
+
+/* 2. Opcional: Garante que os selects e inputs tenham um tamanho uniforme */
+.input-registro {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-row-aplicacao button {
+    padding: 8px 15px;
+}
+
+:host { /* :host se refere ao componente PessoaList em si */
+    display: block; /* Garante que o padding seja aplicado corretamente */
+    padding-bottom: 10px; /* Adiciona 80 pixels de espaço no final da página */
+    min-height: 100vh; /* Garante que ocupe pelo menos a altura total da tela */
+    background-color: #f4f4f4;
 }
