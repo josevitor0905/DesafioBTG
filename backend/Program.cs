@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Repositories;
 using backend.Services;
+using FluentValidation;
+using backend.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,9 @@ builder.Services.AddScoped<VacinaService>();
 builder.Services.AddScoped<VacinacaoService>();
 
 builder.Services.AddControllers();
+
+builder.Services.AddValidatorsFromAssemblyContaining<PessoaValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<VacinaValidator>();
 
 builder.Services.AddCors(options =>
 {

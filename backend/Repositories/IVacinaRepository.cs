@@ -8,4 +8,5 @@ public interface IVacinaRepository
     Task<Vacina> AddAsync(Vacina vacina);
     Task<bool> DeleteAsync(int id);
     Task SaveChangesAsync();
+    Task<Vacina?> GetByNomeAsync(string nome);
 }

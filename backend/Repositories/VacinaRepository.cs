@@ -45,4 +45,9 @@ public class VacinaRepository : IVacinaRepository
     {
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Vacina?> GetByNomeAsync(string nome)
+    {
+        return await _context.Vacinas.FirstOrDefaultAsync(v => v.Nome == nome);
+    }
 }

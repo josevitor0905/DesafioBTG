@@ -158,12 +158,32 @@ export class PessoaList implements OnInit {
         return;
     }
 
-    this.pessoaService.criar(this.novoNome, this.novaIdade, this.novoSexo).subscribe(() => {
-      alert('Pessoa criada com sucesso!');
-      this.novoNome = '';
-      this.novaIdade = null;
-      this.novoSexo = '';
-      this.carregarPessoas();
+    this.pessoaService.criar(this.novoNome, this.novaIdade, this.novoSexo).subscribe({
+      next: () => {
+        alert('Pessoa criada com sucesso!');
+        this.novoNome = '';
+        this.novaIdade = null;
+        this.novoSexo = '';
+        this.carregarPessoas();
+      },
+      error: (err) => {
+        if (err.status === 400) 
+        {
+          const validationErrors = err.error;
+          let mensagens = '';
+
+          for (const campo in validationErrors) 
+          {
+            mensagens += `${validationErrors[campo].join(', ')}\n`;
+          }
+
+          alert('Erros de validação:\n' + mensagens);
+        } 
+        else 
+        {
+          alert('Ocorreu um erro inesperado no servidor.');
+        }
+      }
     });
   }
 
@@ -173,10 +193,30 @@ export class PessoaList implements OnInit {
       return;
     }
 
-    this.vacinaService.criar(this.novaVacina).subscribe(() => {
+    this.vacinaService.criar(this.novaVacina).subscribe({
+      next: () => {
       alert('Vacina criada com sucesso!');
       this.novaVacina = '';
       this.carregarVacinas();
+      },
+      error: (err) => {
+        if (err.status === 400) 
+        {
+          const validationErrors = err.error;
+          let mensagens = '';
+
+          for (const campo in validationErrors) 
+          {
+            mensagens += `${validationErrors[campo].join(', ')}\n`;
+          }
+
+          alert('Erros de validação:\n' + mensagens);
+        } 
+        else 
+        {
+          alert('Ocorreu um erro inesperado no servidor.');
+        }
+      }
     });
   }
 
@@ -201,6 +241,7 @@ export class PessoaList implements OnInit {
     if (confirm('Deseja mesmo excluir esta vacina?'))
     {
       this.vacinaService.remover(id).subscribe(() => this.carregarVacinas());
+      alert('Vacina excluída com sucesso!');
       this.carregarVacinas();
     }
   }

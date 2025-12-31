@@ -32,4 +32,18 @@ public class VacinaService
     {
         return await _vacinaRepo.GetAllAsync();
     }
+
+    public async Task<bool> ExisteVacinaComNomeAsync(string nome)
+    {
+        var vacinateste = await _vacinaRepo.GetByNomeAsync(nome);
+        
+        if (vacinateste == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

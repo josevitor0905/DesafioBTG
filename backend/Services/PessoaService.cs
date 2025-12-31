@@ -53,4 +53,18 @@ public class PessoaService
 
         return pessoas.Select(p => new PessoaDTO{Id = p.Id, Nome = p.Nome, Idade = p.Idade, Sexo = p.Sexo}).ToList();
     }
+
+    public async Task<bool> ExistePessoaComNomeAsync(string nome)
+    {
+        var pessoateste = await _pessoaRepo.GetByNomeAsync(nome);
+        
+        if (pessoateste == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

@@ -1,6 +1,7 @@
 using backend.DTOs;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using FluentValidation;
 
 namespace backend.Controllers;
 
@@ -11,18 +12,30 @@ public class PessoaController : ControllerBase
 {
     private readonly PessoaService _pessoaService;
     private readonly VacinacaoService _vacinacaoService;
-
-    public PessoaController(PessoaService pessoaService, VacinacaoService vacinacaoService)
+    private readonly IValidator<PessoaCreateDTO> _validator;
+    
+    public PessoaController(PessoaService pessoaService, VacinacaoService vacinacaoService, IValidator<PessoaCreateDTO> validator)
     {
         _pessoaService = pessoaService;
         _vacinacaoService = vacinacaoService;
+        _validator = validator;
     }
 
     [HttpPost]
     public async Task<IActionResult> CriarPessoa(PessoaCreateDTO dto)
     {
-        var pessoa = await _pessoaService.CriarPessoaAsync(dto);
-        return Ok(pessoa);
+        var result = await _validator.ValidateAsync(dto);
+
+        if (!result.IsValid)
+        {
+            return BadRequest(result.ToDictionary());
+        }
+        else
+        {
+            var pessoa = await _pessoaService.CriarPessoaAsync(dto);
+            return Ok(pessoa);
+        }
+
     }
 
     [HttpGet]

@@ -48,4 +48,12 @@ public class PessoaRepository : IPessoaRepository
     {
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Pessoa?> GetByNomeAsync(string nome)
+    {
+        return await _context.Pessoas
+            .Include(p => p.Vacinacoes)
+            .ThenInclude(v => v.Vacina)
+            .FirstOrDefaultAsync(p => p.Nome == nome);
+    }
 }

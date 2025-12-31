@@ -8,4 +8,5 @@ public interface IPessoaRepository
     Task<Pessoa> AddAsync(Pessoa pessoa);
     Task<bool> DeleteAsync(int id);
     Task SaveChangesAsync();
+    Task<Pessoa?> GetByNomeAsync(string nome);
 }
