@@ -1,0 +1,12 @@
+# Arquivos gerados pelo Build do .NET
+[Bb]in/
+[Oo]bj/
+
+# Arquivos de depuração e de cache
+*.pdb
+*.suo
+*.user
+
+# Diretórios temporários do VS Code ou IDEs
+.vscode/
+.vs/
